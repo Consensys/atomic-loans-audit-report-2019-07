@@ -53,7 +53,7 @@
   * [6.35 `Medianizer` should use `bytes32` and `uint256` rather than `bytes12` and `uint96` for efficiency](#635-medianizer-should-use-bytes32-and-uint256-rather-than-bytes12-and-uint96-for-efficiency)
   * [6.36 Averaging median values in `Oraclize` is unnecessarily complicated](#636-averaging-median-values-in-oraclize-is-unnecessarily-complicated)
   * [6.37 `Medianizer.values` can be an array](#637-medianizervalues-can-be-an-array)
-  * [6.38 `Medianizer.indexes` in unnecessary](#638-medianizerindexes-in-unnecessary)
+  * [6.38 `Medianizer.indexes` is unnecessary](#638-medianizerindexes-is-unnecessary)
   * [6.39 Token approval in `Medianizer` is unnecessary](#639-token-approval-in-medianizer-is-unnecessary)
   * [6.40 Consider replacing `constant` functions with `pure` or `view` in oracle code](#640-consider-replacing-constant-functions-with-pure-or-view-in-oracle-code)
   * [6.41 `loanExpiration` should be renamed in the collateral swap provider](#641-loanexpiration-should-be-renamed-in-the-collateral-swap-provider)
@@ -275,63 +275,63 @@ The following table contains all the issues discovered during the audit, ordered
 
 | Chapter      | Issue Title             | Issue Status | Severity    |
 |:------------:| ----------------------- |:------------:|:-----------:|
-| 6.1  | [Reentrancy attack on `Funds.pull` can lead to draining funds](#61-reentrancy-attack-on-fundspull-can-lead-to-draining-funds) | Open  | Critical |
-| 6.2  | [Oracles use testing contracts](#62-oracles-use-testing-contracts) | Open  | Critical |
-| 6.3  | [`Loans.setSechs` off-by-one error leads to secret reuse](#63-loanssetsechs-off-by-one-error-leads-to-secret-reuse) | Open  | Critical |
-| 6.4  | [Partial payments are mishandled and can be lost](#64-partial-payments-are-mishandled-and-can-be-lost) | Open  | Critical |
-| 6.5  | [`Funds.sechi` is never updated, leading to reused secrets](#65-fundssechi-is-never-updated-leading-to-reused-secrets) | Open  | Critical |
-| 6.6  | [Reentrancy attack on `Loans.pull` can lead to draining funds](#66-reentrancy-attack-on-loanspull-can-lead-to-draining-funds) | Open  | Critical |
-| 6.7  | [`Loans.unpay` can be called repeatedly to drain tokens](#67-loansunpay-can-be-called-repeatedly-to-drain-tokens) | Open  | Critical |
-| 6.8  | [Reentrancy attack on `Sales.take` can lead to draining funds](#68-reentrancy-attack-on-salestake-can-lead-to-draining-funds) | Open  | Critical |
-| 6.9  | [Bidders can prevent any higher bids from being accepted](#69-bidders-can-prevent-any-higher-bids-from-being-accepted) | Open  | Critical |
-| 6.10  | [Return values from ERC20 `transfer`, `transferFrom`, and `approve` calls must be checked](#610-return-values-from-erc20-transfer-transferfrom-and-approve-calls-must-be-checked) | Open  | Critical |
-| 6.11  | [`Sales.take` transfers too little to the lender (and too much to the borrower)](#611-salestake-transfers-too-little-to-the-lender-and-too-much-to-the-borrower) | Open  | Major |
-| 6.12  | [Lender and borrower can collude to prevent the high bidder from receiving a refund](#612-lender-and-borrower-can-collude-to-prevent-the-high-bidder-from-receiving-a-refund) | Open  | Major |
-| 6.13  | [`Loans.pay` allows anyone to force the borrower to repay a loan](#613-loanspay-allows-anyone-to-force-the-borrower-to-repay-a-loan) | Open  | Major |
-| 6.14  | [`Funds.gsech` integer underflow](#614-fundsgsech-integer-underflow) | Open  | Medium |
-| 6.15  | [`Funds` contract initialization race condition](#615-funds-contract-initialization-race-condition) | Open  | Medium |
-| 6.16  | [Anyone can frontrun `Loans.pull()` to modify the `fund` boolean](#616-anyone-can-frontrun-loanspull-to-modify-the-fund-boolean) | Open  | Medium |
-| 6.17  | [`Oracle.pack` race condition can lead to multiple reward payouts](#617-oraclepack-race-condition-can-lead-to-multiple-reward-payouts) | Open  | Medium |
-| 6.18  | [Chainlink-based oracles use Ropsten job IDs](#618-chainlink-based-oracles-use-ropsten-job-ids) | Open  | Medium |
-| 6.19  | [`Oracle` uses low-level `call` unnecessarily](#619-oracle-uses-low-level-call-unnecessarily) | Open  | Medium |
-| 6.20  | [`Currency` should not be a user-supplied contract](#620-currency-should-not-be-a-user-supplied-contract) | Open  | Medium |
-| 6.21  | [`Vars` should not be a user-supplied contract](#621-vars-should-not-be-a-user-supplied-contract) | Open  | Medium |
-| 6.22  | [`Loan` contract initialization race condition](#622-loan-contract-initialization-race-condition) | Open  | Medium |
-| 6.23  | [`Medianizer` dependent on oracle order](#623-medianizer-dependent-on-oracle-order) | Open  | Minor |
-| 6.24  | [Oracle inheritance model concerns](#624-oracle-inheritance-model-concerns) | Open  | Minor |
-| 6.25  | [Reentrancy attack in `Funds.push`](#625-reentrancy-attack-in-fundspush) | Open  | Minor |
-| 6.26  | [Oracles: use a specific, recent Solidity version](#626-oracles-use-a-specific-recent-solidity-version) | Open  | Minor |
-| 6.27  | [`Ownable` in `Chainlinked.sol`/`ChainlinkedTesting.sol` is unused](#627-ownable-in-chainlinkedsolchainlinkedtestingsol-is-unused) | Open  | Minor |
-| 6.28  | [`Oracle.pack` implementation is unused](#628-oraclepack-implementation-is-unused) | Open  | Minor |
-| 6.29  | [`Oracle.eval` is unneeded](#629-oracleeval-is-unneeded) | Open  | Minor |
-| 6.30  | [`Oracle.push` is unneeded](#630-oraclepush-is-unneeded) | Open  | Minor |
-| 6.31  | [`Oraclize` has an unnecessary payable fallback function](#631-oraclize-has-an-unnecessary-payable-fallback-function) | Open  | Minor |
-| 6.32  | [Many variable names and function names obfuscate their meaning](#632-many-variable-names-and-function-names-obfuscate-their-meaning) | Open  | Minor |
-| 6.33  | [`Medianizer` should use a more specific type rather than `address`](#633-medianizer-should-use-a-more-specific-type-rather-than-address) | Open  | Minor |
-| 6.34  | [`DSValue.setMax` is unused](#634-dsvaluesetmax-is-unused) | Open  | Minor |
-| 6.35  | [`Medianizer` should use `bytes32` and `uint256` rather than `bytes12` and `uint96` for efficiency](#635-medianizer-should-use-bytes32-and-uint256-rather-than-bytes12-and-uint96-for-efficiency) | Open  | Minor |
-| 6.36  | [Averaging median values in `Oraclize` is unnecessarily complicated](#636-averaging-median-values-in-oraclize-is-unnecessarily-complicated) | Open  | Minor |
-| 6.37  | [`Medianizer.values` can be an array](#637-medianizervalues-can-be-an-array) | Open  | Minor |
-| 6.38  | [`Medianizer.indexes` in unnecessary](#638-medianizerindexes-in-unnecessary) | Open  | Minor |
-| 6.39  | [Token approval in `Medianizer` is unnecessary](#639-token-approval-in-medianizer-is-unnecessary) | Open  | Minor |
-| 6.40  | [Consider replacing `constant` functions with `pure` or `view` in oracle code](#640-consider-replacing-constant-functions-with-pure-or-view-in-oracle-code) | Open  | Minor |
-| 6.41  | [`loanExpiration` should be renamed in the collateral swap provider](#641-loanexpiration-should-be-renamed-in-the-collateral-swap-provider) | Open  | Minor |
-| 6.42  | [`Sales` should expose an additional &quot;swap expiration&quot;](#642-sales-should-expose-an-additional-swap-expiration) | Open  | Minor |
-| 6.43  | [Bitcoin scripts can be merged into a single script](#643-bitcoin-scripts-can-be-merged-into-a-single-script) | Open  | Minor |
-| 6.44  | [Consider using a whitelist for allowed ERC20 tokens](#644-consider-using-a-whitelist-for-allowed-erc20-tokens) | Open  | Minor |
-| 6.45  | [`BitcoinCollateralAgentProvider` scripts accepts short secrets](#645-bitcoincollateralagentprovider-scripts-accepts-short-secrets) | Open  | Minor |
-| 6.46  | [`Loans.sechi` reduces clarity and increases gas costs](#646-loanssechi-reduces-clarity-and-increases-gas-costs) | Open  | Minor |
-| 6.47  | [Redundant struct definitions in `Sales`](#647-redundant-struct-definitions-in-sales) | Open  | Minor |
-| 6.48  | [Use specific contract types rather than `address`](#648-use-specific-contract-types-rather-than-address) | Open  | Minor |
-| 6.49  | [Use `external` instead of `public` where possible](#649-use-external-instead-of-public-where-possible) | Open  | Minor |
-| 6.50  | [`Vars` functions should be `view`](#650-vars-functions-should-be-view) | Open  | Minor |
-| 6.51  | [`Vars` should be an interface](#651-vars-should-be-an-interface) | Open  | Minor |
+| 6.1  | [Reentrancy attack on `Funds.pull` can lead to draining funds](#61-reentrancy-attack-on-fundspull-can-lead-to-draining-funds) | Closed  | Critical |
+| 6.2  | [Oracles use testing contracts](#62-oracles-use-testing-contracts) | Closed  | Critical |
+| 6.3  | [`Loans.setSechs` off-by-one error leads to secret reuse](#63-loanssetsechs-off-by-one-error-leads-to-secret-reuse) | Closed  | Critical |
+| 6.4  | [Partial payments are mishandled and can be lost](#64-partial-payments-are-mishandled-and-can-be-lost) | Closed  | Critical |
+| 6.5  | [`Funds.sechi` is never updated, leading to reused secrets](#65-fundssechi-is-never-updated-leading-to-reused-secrets) | Closed  | Critical |
+| 6.6  | [Reentrancy attack on `Loans.pull` can lead to draining funds](#66-reentrancy-attack-on-loanspull-can-lead-to-draining-funds) | Closed  | Critical |
+| 6.7  | [`Loans.unpay` can be called repeatedly to drain tokens](#67-loansunpay-can-be-called-repeatedly-to-drain-tokens) | Closed  | Critical |
+| 6.8  | [Reentrancy attack on `Sales.take` can lead to draining funds](#68-reentrancy-attack-on-salestake-can-lead-to-draining-funds) | Closed  | Critical |
+| 6.9  | [Bidders can prevent any higher bids from being accepted](#69-bidders-can-prevent-any-higher-bids-from-being-accepted) | Closed  | Critical |
+| 6.10  | [Return values from ERC20 `transfer`, `transferFrom`, and `approve` calls must be checked](#610-return-values-from-erc20-transfer-transferfrom-and-approve-calls-must-be-checked) | Closed  | Critical |
+| 6.11  | [`Sales.take` transfers too little to the lender (and too much to the borrower)](#611-salestake-transfers-too-little-to-the-lender-and-too-much-to-the-borrower) | Closed  | Major |
+| 6.12  | [Lender and borrower can collude to prevent the high bidder from receiving a refund](#612-lender-and-borrower-can-collude-to-prevent-the-high-bidder-from-receiving-a-refund) | Closed  | Major |
+| 6.13  | [`Loans.pay` allows anyone to force the borrower to repay a loan](#613-loanspay-allows-anyone-to-force-the-borrower-to-repay-a-loan) | Closed  | Major |
+| 6.14  | [`Funds.gsech` integer underflow](#614-fundsgsech-integer-underflow) | Closed  | Medium |
+| 6.15  | [`Funds` contract initialization race condition](#615-funds-contract-initialization-race-condition) | Closed  | Medium |
+| 6.16  | [Anyone can frontrun `Loans.pull()` to modify the `fund` boolean](#616-anyone-can-frontrun-loanspull-to-modify-the-fund-boolean) | Closed  | Medium |
+| 6.17  | [`Oracle.pack` race condition can lead to multiple reward payouts](#617-oraclepack-race-condition-can-lead-to-multiple-reward-payouts) | Closed  | Medium |
+| 6.18  | [Chainlink-based oracles use Ropsten job IDs](#618-chainlink-based-oracles-use-ropsten-job-ids) | Closed  | Medium |
+| 6.19  | [`Oracle` uses low-level `call` unnecessarily](#619-oracle-uses-low-level-call-unnecessarily) | Closed  | Medium |
+| 6.20  | [`Currency` should not be a user-supplied contract](#620-currency-should-not-be-a-user-supplied-contract) | Closed  | Medium |
+| 6.21  | [`Vars` should not be a user-supplied contract](#621-vars-should-not-be-a-user-supplied-contract) | Closed  | Medium |
+| 6.22  | [`Loan` contract initialization race condition](#622-loan-contract-initialization-race-condition) | Closed  | Medium |
+| 6.23  | [`Medianizer` dependent on oracle order](#623-medianizer-dependent-on-oracle-order) | Closed  | Minor |
+| 6.24  | [Oracle inheritance model concerns](#624-oracle-inheritance-model-concerns) | Closed  | Minor |
+| 6.25  | [Reentrancy attack in `Funds.push`](#625-reentrancy-attack-in-fundspush) | Closed  | Minor |
+| 6.26  | [Oracles: use a specific, recent Solidity version](#626-oracles-use-a-specific-recent-solidity-version) | Closed  | Minor |
+| 6.27  | [`Ownable` in `Chainlinked.sol`/`ChainlinkedTesting.sol` is unused](#627-ownable-in-chainlinkedsolchainlinkedtestingsol-is-unused) | Closed  | Minor |
+| 6.28  | [`Oracle.pack` implementation is unused](#628-oraclepack-implementation-is-unused) | Closed  | Minor |
+| 6.29  | [`Oracle.eval` is unneeded](#629-oracleeval-is-unneeded) | Closed  | Minor |
+| 6.30  | [`Oracle.push` is unneeded](#630-oraclepush-is-unneeded) | Closed  | Minor |
+| 6.31  | [`Oraclize` has an unnecessary payable fallback function](#631-oraclize-has-an-unnecessary-payable-fallback-function) | Closed  | Minor |
+| 6.32  | [Many variable names and function names obfuscate their meaning](#632-many-variable-names-and-function-names-obfuscate-their-meaning) | Closed  | Minor |
+| 6.33  | [`Medianizer` should use a more specific type rather than `address`](#633-medianizer-should-use-a-more-specific-type-rather-than-address) | Closed  | Minor |
+| 6.34  | [`DSValue.setMax` is unused](#634-dsvaluesetmax-is-unused) | Closed  | Minor |
+| 6.35  | [`Medianizer` should use `bytes32` and `uint256` rather than `bytes12` and `uint96` for efficiency](#635-medianizer-should-use-bytes32-and-uint256-rather-than-bytes12-and-uint96-for-efficiency) | Closed  | Minor |
+| 6.36  | [Averaging median values in `Oraclize` is unnecessarily complicated](#636-averaging-median-values-in-oraclize-is-unnecessarily-complicated) | Closed  | Minor |
+| 6.37  | [`Medianizer.values` can be an array](#637-medianizervalues-can-be-an-array) | Closed  | Minor |
+| 6.38  | [`Medianizer.indexes` is unnecessary](#638-medianizerindexes-is-unnecessary) | Closed  | Minor |
+| 6.39  | [Token approval in `Medianizer` is unnecessary](#639-token-approval-in-medianizer-is-unnecessary) | Closed  | Minor |
+| 6.40  | [Consider replacing `constant` functions with `pure` or `view` in oracle code](#640-consider-replacing-constant-functions-with-pure-or-view-in-oracle-code) | Closed  | Minor |
+| 6.41  | [`loanExpiration` should be renamed in the collateral swap provider](#641-loanexpiration-should-be-renamed-in-the-collateral-swap-provider) | Fix Not Reviewed  | Minor |
+| 6.42  | [`Sales` should expose an additional &quot;swap expiration&quot;](#642-sales-should-expose-an-additional-swap-expiration) | Closed  | Minor |
+| 6.43  | [Bitcoin scripts can be merged into a single script](#643-bitcoin-scripts-can-be-merged-into-a-single-script) | Fix Not Reviewed  | Minor |
+| 6.44  | [Consider using a whitelist for allowed ERC20 tokens](#644-consider-using-a-whitelist-for-allowed-erc20-tokens) | Closed  | Minor |
+| 6.45  | [`BitcoinCollateralAgentProvider` scripts accepts short secrets](#645-bitcoincollateralagentprovider-scripts-accepts-short-secrets) | Fix Not Reviewed  | Minor |
+| 6.46  | [`Loans.sechi` reduces clarity and increases gas costs](#646-loanssechi-reduces-clarity-and-increases-gas-costs) | Closed  | Minor |
+| 6.47  | [Redundant struct definitions in `Sales`](#647-redundant-struct-definitions-in-sales) | Closed  | Minor |
+| 6.48  | [Use specific contract types rather than `address`](#648-use-specific-contract-types-rather-than-address) | Closed  | Minor |
+| 6.49  | [Use `external` instead of `public` where possible](#649-use-external-instead-of-public-where-possible) | Closed  | Minor |
+| 6.50  | [`Vars` functions should be `view`](#650-vars-functions-should-be-view) | Closed  | Minor |
+| 6.51  | [`Vars` should be an interface](#651-vars-should-be-an-interface) | Closed  | Minor |
 
 ### 6.1 Reentrancy attack on `Funds.pull` can lead to draining funds
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Critical | Open | This issue is currently under review. |
+| Critical | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/19. |
 
 #### Description
 
@@ -357,7 +357,7 @@ The checks-effects-interactions pattern dictates that all state changes should h
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Critical | Open | This issue is currently under review. |
+| Critical | Closed | This will be fully resolved at the time of deployment, but it has been addressed in https://github.com/AtomicLoans/atomicloans-oracle-contracts/pull/22 by adding a comment with the correct production import.  |
 
 #### Description
 
@@ -372,7 +372,7 @@ Switch to the production contracts before deployment.
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Critical | Open | This issue is currently under review. |
+| Critical | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/20. |
 
 #### Description
 
@@ -405,7 +405,7 @@ sechs[loan].sechAS = [bsechs[1], bsechs[2], bsechs[3]];
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Critical | Open | This issue is currently under review. |
+| Critical | Closed | This issue is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/21. |
 
 #### Description
 
@@ -419,7 +419,7 @@ tokes[loan].transfer(address(sales), back(loan));
 
 This happens every time a sale is started (each call to `Loans.sell`), so it happens up to three times. This means that even though 1x the amount is in the contract, 3x is transferred. This results in either failure or transferring tokens that rightfully belong to another loan.
 
-This code from `Sales.unpush` transfers the amount back to the `Loans` contract, but it does it only once (after the third sale):
+This code from `Sales.unpush` transfers the amount to the borrower, but it does it only once (after the third sale):
 
 
 **code/ethereum/contracts/Sales.sol:L286-L288**
@@ -429,16 +429,14 @@ if (next(sales[sale].loani) == 3) {
 }
 ```
 
-Even if the funds were to make it back to the `Loans` contract, there's no way for anyone to retrieve them, as `unpay` and `pull` both require the loan to have been paid in full.
-
 #### Remediation
 
-Only transfer the partial payment to the `Sales` contract once, and then leave it there and allow it to be retrieved after the sales process is over. Transferring it back to the `Loans` contract and retrieving it there is possible, but care must be taken to only allow retrieval after the amount has been transferred.
+Only transfer the partial payment to the `Sales` contract once.
 ### 6.5 `Funds.sechi` is never updated, leading to reused secrets
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Critical | Open | This issue is currently under review. |
+| Critical | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/22. |
 
 #### Description
 
@@ -478,7 +476,7 @@ Add 4 to `sechi` every time a new loan is created.
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Critical | Open | This issue is currently under review. |
+| Critical | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/23. |
 
 #### Description
 
@@ -518,7 +516,7 @@ A safer fix might be to use the withdrawal pattern everywhere. Track where funds
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Critical | Open | This issue is currently under review. |
+| Critical | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/25. |
 
 #### Description
 
@@ -544,7 +542,7 @@ Update the loan's state in some way that prevents `unpay` from being called agai
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Critical | Open | This issue is currently under review. |
+| Critical | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/26. |
 
 #### Description
 
@@ -585,7 +583,7 @@ A safer fix might be to use the withdrawal pattern everywhere. Track where funds
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Critical | Open | This issue is currently under review. |
+| Critical | Closed | This is addressed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/44. Now only a single token is allowed per contract, and that token can be chosen carefully to avoid problematic implementations. |
 
 #### Description
 
@@ -629,7 +627,7 @@ Use the "withdrawal pattern" instead. Instead of immediately transferring the to
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Critical | Open | This issue is currently under review. |
+| Critical | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/18 and https://github.com/AtomicLoans/atomicloans-oracle-contracts/pull/8. |
 
 #### Description
 
@@ -757,7 +755,7 @@ Wrap all calls to `transfer`, `transferFrom`, and `approve` in a `require` state
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Major | Open | This issue is currently under review. |
+| Major | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/27. |
 
 #### Description
 
@@ -798,7 +796,7 @@ Transfer `lent(...)` to the lender, rather than `lentb(...)`. Also make the corr
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Major | Open | This issue is currently under review. |
+| Major | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/28. |
 
 #### Description
 
@@ -830,7 +828,7 @@ The high bidder should always be able to receive a refund if the settlement expi
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Major | Open | This issue is currently under review. |
+| Major | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/29. |
 
 #### Description
 
@@ -857,7 +855,7 @@ Either require the caller to be the borrower or transfer funds from `msg.sender`
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Medium | Open | This issue is currently under review. |
+| Medium | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/22. |
 
 #### Description
 
@@ -881,7 +879,7 @@ Either remove the check because the array bounds check is already taking care of
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Medium | Open | This issue is currently under review. |
+| Medium | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/30. |
 
 #### Description
 
@@ -912,7 +910,7 @@ Deploy the `Loans` contract in the `Funds` constructor or pass the `Loans` contr
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Medium | Open | This issue is currently under review. |
+| Medium | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/31. |
 
 #### Description
 
@@ -950,7 +948,7 @@ Either remove the `fund` parameter altogether and assume lenders always want fun
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Medium | Open | This issue is currently under review. |
+| Medium | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-oracle-contracts/pull/11. |
 
 #### Description
 
@@ -988,7 +986,7 @@ Store the values when `pack` is called, and use them when the requests are compl
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Medium | Open | This issue is currently under review. |
+| Medium | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-oracle-contracts/pull/25. |
 
 #### Description
 
@@ -1009,7 +1007,7 @@ Be sure to switch to the main network job IDs before deployment.
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Medium | Open | This issue is currently under review. |
+| Medium | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-oracle-contracts/pull/10. |
 
 #### Description
 
@@ -1028,7 +1026,7 @@ Use `med.poke()` instead, which is simpler and propagates failures. If there's a
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Medium | Open | This issue is currently under review. |
+| Medium | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/32. |
 
 #### Description
 
@@ -1045,7 +1043,7 @@ Get rid of the `Currency` contract altogether. Instead of using the number of de
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Medium | Open | This issue is currently under review. |
+| Medium | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/33. |
 
 #### Description
 
@@ -1083,7 +1081,7 @@ A few suggestions for how to address this, in order of descending preference:
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Medium | Open | This issue is currently under review. |
+| Medium | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/34. |
 
 #### Description
 
@@ -1114,7 +1112,7 @@ Add `sales = new Sales(this, med);` to the `Loans` constructor and get rid of `o
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-oracle-contracts/pull/9. |
 
 #### Description
 
@@ -1143,7 +1141,7 @@ Consider implementing `setMax` at the base `Oracle` layer and having it be a no-
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-oracle-contracts/pull/9. |
 
 #### Description
 
@@ -1162,7 +1160,7 @@ Make sure functionality is introduced at the right layer of the inheritance and 
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/35. |
 
 #### Description
 
@@ -1187,7 +1185,7 @@ Move the balance update to before the transfer.
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-oracle-contracts/pull/13. |
 
 #### Description
 
@@ -1215,7 +1213,7 @@ Use specific `pragma` directives in code to pin the code to a particular (recent
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-oracle-contracts/pull/14. |
 
 #### Description
 
@@ -1228,7 +1226,7 @@ Remove the unused `Ownable` contract.
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-oracle-contracts/pull/9. |
 
 #### Description
 
@@ -1241,7 +1239,7 @@ Remove the dead code by deleting the `Oracle.pack` implementation.
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-oracle-contracts/pull/15. |
 
 #### Description
 
@@ -1264,7 +1262,7 @@ Remove `eval` and mark `lval` as `public` instead.
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-oracle-contracts/pull/16. |
 
 #### Description
 
@@ -1285,7 +1283,7 @@ Remove the unnecessary and unused `push` function.
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This issue is invalid. The fallback function is needed to use the WETH `withdraw` function to convert WETH to ether. |
 
 #### Description
 
@@ -1304,7 +1302,7 @@ Remove the fallback function.
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is addressed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/50 and https://github.com/AtomicLoans/atomicloans-oracle-contracts/pull/26. |
 
 #### Description
 
@@ -1483,7 +1481,7 @@ Use more reader-friendly names that describe the purpose and functionality of th
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-oracle-contracts/pull/20. |
 
 #### Description
 
@@ -1498,7 +1496,7 @@ Use `Oracle[] public oracles` instead of `mapping(bytes12 => address) values` an
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-oracle-contracts/pull/9. |
 
 #### Description
 
@@ -1521,7 +1519,7 @@ Remove the unused function and instead declare one in `Oracle` so the `Medianize
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-oracle-contracts/pull/20. |
 
 #### Description
 
@@ -1534,7 +1532,7 @@ Use `bytes32` and `uint256` everywhere. Because the values are actually numbers,
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-oracle-contracts/pull/20. |
 
 #### Description
 
@@ -1557,7 +1555,7 @@ Simply use `(val1 + val2) / 2`. The values have already been cast to `uint128`s,
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-oracle-contracts/pull/20. |
 
 #### Description
 
@@ -1574,11 +1572,11 @@ Instead of a `mapping` and a `next` pointer, `values` can simply be an array (wi
 #### Remediation
 
 Use `address[] public values` (or better yet `Oracle[] public values`) instead and use `values.length` where it's needed.
-### 6.38 `Medianizer.indexes` in unnecessary
+### 6.38 `Medianizer.indexes` is unnecessary
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | Fixed in https://github.com/AtomicLoans/atomicloans-oracle-contracts/pull/20. |
 
 #### Description
 
@@ -1599,7 +1597,7 @@ Remove the unused code: `indexes` and everything in the `set` function that modi
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-oracle-contracts/pull/17. |
 
 #### Description
 
@@ -1630,7 +1628,7 @@ Remove the dead code.
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-oracle-contracts/pull/18. |
 
 #### Description
 Declaring a function as `constant` is deprecated, and should be replaced with `view` or, if state is not being read from, with `pure`.  `DSMath.sol` is the largest offender, but `constant` functions are also being used in `DSValue.sol` and `Medianizer.sol`. These updates will also make it easier to port the code to Solidity 0.5.x, which has built-in security benefits.
@@ -1652,7 +1650,7 @@ Most of these functions can be marked `pure`, but in instances where state is be
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Fix Not Reviewed | This is addressed in https://github.com/AtomicLoans/chainabstractionlayer-loans/pull/8, which has _not_ been reviewed by the audit team. (It will be included in an upcoming audit.) |
 
 #### Description
 
@@ -1690,7 +1688,7 @@ Rename the parameter to something like `bidderSettlementExpiration` or `bidderCl
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/47. |
 
 #### Description
 
@@ -1717,7 +1715,7 @@ sales[sale].swapex = now + vars.SALEX() + vars.SETX() / 2; // added swapex
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Fix Not Reviewed | This is addressed in https://github.com/AtomicLoans/chainabstractionlayer-loans/pull/8, which has _not_ been reviewed by the audit team. (It will be included in an upcoming audit.) |
 
 #### Description
 
@@ -1730,7 +1728,7 @@ Use the combined script everywhere, with different parameters for the different 
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/44. Contracts now operate with a single token, and new contracts must be deployed to support new tokens. |
 
 #### Description
 
@@ -1743,7 +1741,7 @@ Consider only allowing principal from a small whitelist of allowed ERC20 tokens.
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Fix Not Reviewed | This is addressed in https://github.com/AtomicLoans/chainabstractionlayer-loans/pull/8, which has _not_ been reviewed by the audit team. (It will be included in an upcoming audit.) |
 
 #### Description
 
@@ -1860,7 +1858,7 @@ Instead of `OP_LESSTHANOREQUAL OP_VERIFY`, use `OP_EQUALVERIFY` to validate that
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/48. |
 
 #### Description
 
@@ -1901,7 +1899,7 @@ sale = sales.open(loan, loans[loan].bor, loans[loan].lend, loans[loan].agent,
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/37. |
 
 #### Description
 
@@ -1939,7 +1937,7 @@ Delete all but a single struct (maybe called `Sig`) and use that everywhere.
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/44. |
 
 #### Description
 
@@ -1981,7 +1979,7 @@ Use specific constructor types wherever possible.
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This is fixed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/49. |
 
 #### Description
 
@@ -1997,7 +1995,7 @@ Use `external` instead of `public` everywhere possible.
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This contract was removed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/33. |
 
 #### Description
 
@@ -2041,7 +2039,7 @@ Mark these functions' mutability as `view`.
 
 | Severity     | Status    | Remediation Comment |
 |:------------:|:---------:| ------------------- |
-| Minor | Open | This issue is currently under review. |
+| Minor | Closed | This contract was removed in https://github.com/AtomicLoans/atomicloans-eth-contracts/pull/33. |
 
 #### Description
 
